@@ -23,9 +23,26 @@ namespace HelloWorld
                     DisplayMovie ();
                 else if (input == 'Q')
                     break;
+                else if (input == 'R')
+                    RemoveMovie ();
+                else if (input == 'Q')
+                    break;
             };
 
+
+
         }
+
+        private static void RemoveMovie ()
+        {
+            //confirm removal
+            if (!ReadBoolean ("Are you sure you want to remove {title}?"))
+                return;
+
+            //remove movie
+            title = null;
+        }
+
         static void AddMovie ()
         {
             //Get title
@@ -47,8 +64,14 @@ namespace HelloWorld
             hasSeen = ReadBoolean ("Have Seen? ");
         }
 
-        static void DisplayMovie()
+        static void DisplayMovie ()
         {
+            //display message if no movies
+            if (String.IsNullOrEmpty (title))
+            {
+                Console.WriteLine ("No movies");
+                return;
+            }
             //title, desc, release yr, run length, hasSeen
             Console.WriteLine (title);
             Console.WriteLine (description);
@@ -59,13 +82,15 @@ namespace HelloWorld
 
             //2) Printf
             //Console.WriteLine ("Run time: {0}", runLength);
-           
+
             //3) String formatting
             var formattedString = String.Format ("Run time: {0}", runLength);
             Console.WriteLine (formattedString);
 
             //4) String interpolation
             Console.WriteLine ($"Seen it? {hasSeen}");
+
+            Console.WriteLine ("".PadLeft (50, '-'));
 
 
         }
@@ -87,7 +112,7 @@ namespace HelloWorld
             };
 
         }
-        static int ReadInt32(string message)
+        static int ReadInt32 ( string message )
         {
             while (true)
             {
@@ -98,7 +123,7 @@ namespace HelloWorld
                 //int result = Int32.Parse (input);
                 //int result;
                 //if (Int32.TryParse (input, out result))
-                if (Int32.TryParse(input, out int result))
+                if (Int32.TryParse (input, out int result))
                     return result;
 
                 Console.WriteLine ("Not a number");
@@ -113,6 +138,7 @@ namespace HelloWorld
             {
                 Console.WriteLine ("A)dd Movie");
                 Console.WriteLine ("D)isplay Movie");
+                Console.WriteLine ("R)emove Movie");
                 Console.WriteLine ("Q)uit");
 
                 string input = Console.ReadLine ();
@@ -121,16 +147,19 @@ namespace HelloWorld
                 input = input.ToLower ();
                 //if (input == "A" || input == "a")
                 //if (input == "a")
-                if (String.Compare(input, "a", true) == 0)
+                if (String.Compare (input, "a", true) == 0)
                 {
                     return 'A';
                 } else if (input == "q")
                 {
                     return 'Q';
                 } else if (input == "d")
+                {
                     return 'D';
-
-                else
+                } else if (input == "r")
+                {
+                    return 'R';
+                } else
                 {
                     Console.WriteLine ("Invalid input");
                 };
@@ -162,44 +191,57 @@ namespace HelloWorld
 
             string fullName = "Fred" + " " + "Jones";
         }
+
+
+        static void DemoArray ()
+        {
+            double[] payRates = new double[100];
+
+            //50th element to 7.25
+            payRates[49] = 7.25;
+
+            //Read 89th element into temp var
+            double payRate = payRates[88];
+
+            //Print out the 80th element
+            Console.WriteLine (payRates[79]);
+
+            //Empty array
+            bool[] isPassing = new bool[0];
+
+            //Enumerating an array
+            for (int index = 0; index < payRates.Length; ++index)
+                Console.WriteLine (payRates[index]);
+
+            //Type inferencing
+            //string name = "Bob William Smith Jr III";
+            var name = "Bob William Smith Jr III";
+
+
+            string[] nameParts = name.Split (' ');
+        }
+
+        static void DemoString ()
+        {
+            string str = null;
+
+            //checking for null or empty string
+            if (str != null && str != "")
+                str = str.ToLower ();
+
+            if (str != null && str != String.Empty)
+                str = str.ToLower ();
+
+            //correct approach is this
+            if (!String.IsNullOrEmpty (str))
+                str = str.ToLower ();
+        }
+
+        static string title;
+        static string description;
+        static int runLength;
+        static int releaseYear;
+        static bool hasSeen;
     }
-
-    static void DemoConditional()
-    {
-
-    }
-
-    static void DemoArray()
-    {
-        double[] payRates = new double[100];
-
-        //50th element to 7.25
-        payRates[49] = 7.25;
-
-        //Read 89th element into temp var
-        double payRate = payRates[88];
-
-        //Print out the 80th element
-        Console.WriteLine (payRates[79]);
-
-        //Empty array
-        bool[] isPassing = new bool[0];
-
-        //Enumerating an array
-        for (int index = 0; index < payRates.Length; ++index)
-            Console.WriteLine(payRates[index]);
-
-        //Type inferencing
-        //string name = "Bob William Smith Jr III";
-        var name = "Bob William Smith Jr III";
-
-
-        string[] nameParts = name.Split (' ');
-    }
-
-    static string title;
-    static string description;
-    static int runLength;
-    static int releaseYear;
-    static bool hasSeen;
 }
+
