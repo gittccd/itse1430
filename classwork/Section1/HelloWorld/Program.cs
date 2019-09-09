@@ -14,10 +14,27 @@ namespace HelloWorld
             string description;
             bool haveSeen; */
 
-            while (true)
+
+            var quit = false;       //??
+            while (!quit)
             {
                 char input = DisplayMenu ();
-                if (input == 'A')
+                switch (input)
+                {
+                    //fallthrough allowed only if case is empty
+                    //must have break/return at end of each case
+                    case 'A': AddMovie (); break;
+                    case 'D': DisplayMovie (); break;
+                    case 'R': RemoveMovie (); break;
+                    case 'Q':
+                    {
+                        quit = true;
+                        break;
+                    }
+                    default: Console.WriteLine ("Not supported"); break;
+                };
+
+                /*if (input == 'A')
                     AddMovie ();
                 else if (input == 'D')
                     DisplayMovie ();
@@ -26,7 +43,7 @@ namespace HelloWorld
                 else if (input == 'R')
                     RemoveMovie ();
                 else if (input == 'Q')
-                    break;
+                    break;  */
             };
 
 
