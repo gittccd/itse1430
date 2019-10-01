@@ -78,6 +78,11 @@ namespace Itse1430.MovieLib
         /// <summary>
         /// Validates the movie.</summary>
         /// <returns>An error msg if validation fails or empty string otherwise.</returns>
+        /// 
+        public override string ToString ()
+        {
+            return $"{Title} ({ReleaseYear})";
+        }
 
         public string Validate()
         {

@@ -65,7 +65,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnFileExit);
             // 
@@ -128,6 +128,7 @@
             // 
             // _listMovies
             // 
+            this._listMovies.DisplayMember = "Title";
             this._listMovies.FormattingEnabled = true;
             this._listMovies.Location = new System.Drawing.Point(13, 37);
             this._listMovies.Name = "_listMovies";

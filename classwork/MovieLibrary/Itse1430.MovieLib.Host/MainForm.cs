@@ -37,7 +37,13 @@ namespace Itse1430.MovieLib.Host
         private void UpdateUI()
         {
             var movies = GetMovies ();
-            _listMovies.Items.AddRange (movies);
+
+            //Programmatic approach
+            //_listMovies.Items.Clear ();
+            //_listMovies.Items.AddRange (movies);
+
+            //For more complex bindings
+            _listMovies.DataSource = movies;
         }
 
 
@@ -64,21 +70,61 @@ namespace Itse1430.MovieLib.Host
                 {
                     _movies[index] = null;
                     return;
-                }
-            }
+                };
+            };
         }
 
         private Movie[] GetMovies()
         {
             //TODO: Filter out empty movies
-            return _movies;
+            var count = 0;
+            foreach (var movie in _movies)
+                if (movie != null)
+                    ++count;
+
+            var index = 0;
+            var movies = new Movie[count];
+            foreach (var movie in _movies)
+                if (movie != null)
+                    movies[index++] = movie;
+
+            return movies;
         }
 
         private Movie[] _movies = new Movie[100];
 
         private Movie GetSelectedMovie()
         {
-            return _movies[0];
+            var item = _listMovies.SelectedItem;
+            //if (item == null)
+            //    return null;
+
+            //movie or null
+            return item as Movie;
+
+            /*other approaches
+            //C-style cast:  
+            (Movie)item;
+
+            //item is Movie;  E is T --> bool
+
+
+
+            //old approach 1
+            var tempVar = item as Movie;
+            if (tempVar != null)...;
+
+            //old approach 2
+            if (item is Movie)
+            {
+                var i = (Movie)item;
+                //do something with movie
+            }
+            //pattern matching
+            if (item is Movie movie)
+            {
+
+            }; */
         }
 
         private void OnHelpAbout ( object sender, EventArgs e )
@@ -100,6 +146,7 @@ namespace Itse1430.MovieLib.Host
             if (form.ShowDialog (this) == DialogResult.OK)
             {
                 RemoveMovie (movie);
+                //RemoveMovie (form.Movie);
                 AddMovie (form.Movie);
                 UpdateUI ();
             }
@@ -110,6 +157,23 @@ namespace Itse1430.MovieLib.Host
 
         private void OnMovieDelete ( object sender, EventArgs e )
         {
+            //Demo
+            var menuItem = sender as Button;
+            //var text = menuItem.Text;
+
+            //handle null
+            var text = "";
+            if (menuItem != null)
+                text = menuItem.Text;
+            else
+                text = "";
+
+            //as expression
+            var text2 = (menuItem != null) ? menuItem.Text : "";
+
+            //Null conditional operator
+            var text3 = menuItem?.Text ?? "";
+
             var movie = GetSelectedMovie ();
             if (movie == null)
                 return;
