@@ -298,4 +298,3 @@ dotnet_naming_style.start_with_s_underscore.required_prefix               = s_
 
 dotnet_naming_style.start_with_underscore.capitalization                  = camel_case
 dotnet_naming_style.start_with_underscore.required_prefix                 = _
-
