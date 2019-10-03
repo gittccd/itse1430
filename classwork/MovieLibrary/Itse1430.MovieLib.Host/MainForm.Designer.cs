@@ -50,7 +50,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(955, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -129,10 +129,11 @@
             // _listMovies
             // 
             this._listMovies.DisplayMember = "Title";
+            this._listMovies.Dock = System.Windows.Forms.DockStyle.Fill;
             this._listMovies.FormattingEnabled = true;
-            this._listMovies.Location = new System.Drawing.Point(13, 37);
+            this._listMovies.Location = new System.Drawing.Point(0, 24);
             this._listMovies.Name = "_listMovies";
-            this._listMovies.Size = new System.Drawing.Size(930, 498);
+            this._listMovies.Size = new System.Drawing.Size(784, 437);
             this._listMovies.TabIndex = 1;
             // 
             // MainForm
@@ -140,7 +141,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(955, 549);
+            this.ClientSize = new System.Drawing.Size(784, 461);
             this.Controls.Add(this._listMovies);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
