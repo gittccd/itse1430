@@ -12,9 +12,20 @@ namespace Itse1430.MovieLib.Host
 {
     public partial class MovieForm : Form
     {
-        public MovieForm ()
+        //Base ctor is always called unless specified
+        public MovieForm () //: base()
         {
+            //Init()
             InitializeComponent ();
+        }
+
+        public MovieForm (string title) : this()
+        {
+
+            //Handled by ctor chaining
+            //InitializeComponent ();
+            //Text = title;
+
         }
 
         public Movie Movie { get; set; }
@@ -34,6 +45,8 @@ namespace Itse1430.MovieLib.Host
                 _cbRating.Text = Movie.Rating;
                 _cbHasSeen.Checked = Movie.HasSeen;
             };
+
+            ValidateChildren ();
         }
 
         private void OnSave ( object sender, EventArgs e )
@@ -86,6 +99,9 @@ namespace Itse1430.MovieLib.Host
             {
                 e.Cancel = true;
                 _errors.SetError (control, "Name is required");
+            } else
+            {
+                _errors.SetError (control, "");
             }
                 
         }
@@ -95,16 +111,30 @@ namespace Itse1430.MovieLib.Host
             var control = sender as TextBox;
 
             var value = GetAsInt32 (control);
-            if (value < 1900)
+            //Name is required
+            if (value <= 1900)
+            {
                 e.Cancel = true;
+                _errors.SetError (control, "ReleaseYear must be <= 1900");    
+            } else
+            {
+                _errors.SetError (control, "");
+            }
         }
 
         private void OnValidatingRating ( object sender, CancelEventArgs e )
         {
             var control = sender as ComboBox;
 
-            if (control.SelectedText == "")
+            //Text is required
+            if (control.SelectedIndex == -1)
+            {
                 e.Cancel = true;
+                _errors.SetError (control, "Rating is required");
+            } else
+            {
+                _errors.SetError (control, "");
+            }
         }
 
         private void OnValidatingRunLength ( object sender, CancelEventArgs e )
@@ -112,8 +142,15 @@ namespace Itse1430.MovieLib.Host
             var control = sender as TextBox;
 
             var value = GetAsInt32 (control);
+            //Name is required
             if (value < 0)
+            {
                 e.Cancel = true;
+                _errors.SetError (control, "Run Length must be >= 0");
+            } else
+            {
+                _errors.SetError (control, "");
+            }
         }
     }
 }
