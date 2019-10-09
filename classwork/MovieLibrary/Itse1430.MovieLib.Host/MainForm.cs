@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Itse1430.MovieLib.Host
@@ -30,13 +31,13 @@ namespace Itse1430.MovieLib.Host
 
             //show the new movie form modally
             if (form.ShowDialog (this) == DialogResult.OK)
-                AddMovie (form.Movie);
+                _movies.Add (form.Movie);
             UpdateUI ();
         }
 
         private void UpdateUI()
         {
-            var movies = GetMovies ();
+            var movies = _movies.GetAll ();
 
             //Programmatic approach
             //_listMovies.Items.Clear ();
@@ -47,51 +48,8 @@ namespace Itse1430.MovieLib.Host
         }
 
 
-        private void AddMovie(Movie movie)
-        {
-            //Add to array
-            for (var index = 0; index < _movies.Length; ++index)
-            {
-                if (_movies[index] == null)
-                {
-                    _movies[index] = movie;
-                    return;
-                }
-            }
-        }
 
-        private void RemoveMovie(Movie movie)
-        {
-            //Remove from array
-            for (var index = 0; index < _movies.Length; ++index)
-            {
-                //this won't work
-                if (_movies[index] == movie)
-                {
-                    _movies[index] = null;
-                    return;
-                };
-            };
-        }
-
-        private Movie[] GetMovies()
-        {
-            //TODO: Filter out empty movies
-            var count = 0;
-            foreach (var movie in _movies)
-                if (movie != null)
-                    ++count;
-
-            var index = 0;
-            var movies = new Movie[count];
-            foreach (var movie in _movies)
-                if (movie != null)
-                    movies[index++] = movie;
-
-            return movies;
-        }
-
-        private Movie[] _movies = new Movie[100];
+        private MovieDatabase _movies = new MovieDatabase ();
 
         private Movie GetSelectedMovie()
         {
@@ -145,9 +103,7 @@ namespace Itse1430.MovieLib.Host
 
             if (form.ShowDialog (this) == DialogResult.OK)
             {
-                RemoveMovie (movie);
-                //RemoveMovie (form.Movie);
-                AddMovie (form.Movie);
+                _movies.Update (movie.Id, form.Movie);
                 UpdateUI ();
             }
                  
@@ -185,7 +141,7 @@ namespace Itse1430.MovieLib.Host
                 return;
 
             //Delete it
-            RemoveMovie (movie);
+            _movies.Remove (movie.Id);
             UpdateUI ();
 
         }

@@ -10,6 +10,9 @@ namespace Itse1430.MovieLib
     /// <remarks></remarks>
     public class Movie
     {
+
+        public int Id { get; set; }
+
         /// <summary>Gets or sets the title of the movie.</summary>
         public string Title
         {
