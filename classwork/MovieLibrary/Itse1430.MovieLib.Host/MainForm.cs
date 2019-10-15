@@ -8,13 +8,10 @@ namespace Itse1430.MovieLib.Host
     {
         public MainForm ()
         {
-            //int x = 10;
+        
             InitializeComponent ();
 
-            //Itse1430.MovieLib.Movie
-            Movie movie = new Movie ();
-            movie.Title = "Jaws";
-            movie.Description = movie.Title;  //??
+            
         }
 
         private void ToolStripSeparator1_Click ( object sender, EventArgs e )
@@ -38,6 +35,9 @@ namespace Itse1430.MovieLib.Host
         private void UpdateUI()
         {
             var movies = _movies.GetAll ();
+
+            //var movie = movies[0];
+            //movie.Title = "Bob";
 
             //Programmatic approach
             //_listMovies.Items.Clear ();
@@ -144,6 +144,13 @@ namespace Itse1430.MovieLib.Host
             _movies.Remove (movie.Id);
             UpdateUI ();
 
+        }
+
+        protected override void OnLoad ( EventArgs e )
+        {
+            base.OnLoad (e);
+
+            UpdateUI ();
         }
 
         private void OnFileExit ( object sender, EventArgs e )
