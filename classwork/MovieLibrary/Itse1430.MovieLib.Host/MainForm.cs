@@ -10,8 +10,7 @@ namespace Itse1430.MovieLib.Host
         {
         
             InitializeComponent ();
-
-            
+           
         }
 
         private void ToolStripSeparator1_Click ( object sender, EventArgs e )
@@ -46,8 +45,6 @@ namespace Itse1430.MovieLib.Host
             //For more complex bindings
             _listMovies.DataSource = movies;
         }
-
-
 
         private MovieDatabase _movies = new MovieDatabase ();
 
@@ -106,10 +103,7 @@ namespace Itse1430.MovieLib.Host
                 _movies.Update (movie.Id, form.Movie);
                 UpdateUI ();
             }
-                 
         }
-
-
 
         private void OnMovieDelete ( object sender, EventArgs e )
         {
@@ -143,13 +137,11 @@ namespace Itse1430.MovieLib.Host
             //Delete it
             _movies.Remove (movie.Id);
             UpdateUI ();
-
         }
 
         protected override void OnLoad ( EventArgs e )
         {
             base.OnLoad (e);
-
             UpdateUI ();
         }
 

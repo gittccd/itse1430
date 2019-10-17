@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace Itse1430.MovieLib
 {
     /// <summary>Represents movie data.</summary>
     /// <remarks></remarks>
-    public class Movie
+    public class Movie : IValidatableObject
     {
 
         public int Id { get; set; }
@@ -87,7 +88,7 @@ namespace Itse1430.MovieLib
             return $"{Title} ({ReleaseYear})";
         }
 
-        public string Validate()
+        /*public string Validate()
         {
             var title = "";
             //name is required
@@ -103,6 +104,31 @@ namespace Itse1430.MovieLib
             if (String.IsNullOrEmpty (_rating))
                 return "Rating is required";
             return "";
+        }*/
+
+        public IEnumerable<ValidationResult> Validate ( ValidationContext validationContext )
+        {
+            //Iterator syntax
+            //var results = new List<ValidationResult> ();
+
+            //name is required
+            if (String.IsNullOrEmpty (Title))
+                //results.Add(new ValidationResult("Title is required."));
+                yield return new ValidationResult ("Title is required.");
+
+            //releaseyear >= 1900
+            if (ReleaseYear < 1900)
+                yield return new ValidationResult("Release Year must be >= 1900.");
+
+            //run length >= 0
+            if (RunLength < 0)
+                yield return new ValidationResult("Run Length must be >= 0");
+
+            //rating is required
+            if (String.IsNullOrEmpty (Rating))
+                yield return new ValidationResult("Rating is required");
+
+            //return results;
         }
         //can new up other objects
         //private Movie originalMovie = new Movie ();

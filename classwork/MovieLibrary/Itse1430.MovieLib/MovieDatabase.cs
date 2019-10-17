@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,7 +68,12 @@ namespace Itse1430.MovieLib
             //TODO: validation
             if (movie == null)
                 return null;
-            if (!String.IsNullOrEmpty (movie.Validate ()))
+            //if (!String.IsNullOrEmpty (movie.Validate ()))
+            var context = new ValidationContext (movie);
+
+            var results = movie.Validate (context);
+
+            if (results.Count () > 0)
                 return null;
 
             //name must be unique
@@ -82,18 +88,15 @@ namespace Itse1430.MovieLib
             _movies.Add (newMovie);
 
             return movie;
-           
         }
 
         public void Remove ( int id )
         {
             var movie = FindMovie (id);
-
             if (movie != null)
                 _movies.Remove (movie);
 
             _movies.Remove (movie);
-           
         }
 
         public Movie Get (int id)
@@ -124,9 +127,14 @@ namespace Itse1430.MovieLib
                 return;
             if (newMovie == null)
                 return;
-            if (!String.IsNullOrEmpty(newMovie.Validate()))
-                return;
 
+            //if (!String.IsNullOrEmpty(newMovie.Validate()))
+            var context = new ValidationContext (newMovie);
+            var results = newMovie.Validate (context);
+
+            if (results.Count () > 0)
+                return;
+           
             var existing = FindMovie (newMovie.Title);
             if (existing != null && existing.Id != id)
                 return;
@@ -171,8 +179,6 @@ namespace Itse1430.MovieLib
 
         //private Movie[] _movies = new Movie[100];
         private List<Movie> _movies = new List<Movie> ();
-
         private int _id = 0;
-
     }
 }

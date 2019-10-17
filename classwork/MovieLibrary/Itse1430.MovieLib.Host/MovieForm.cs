@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -66,17 +67,53 @@ namespace Itse1430.MovieLib.Host
              };
 
             //validate
-            var message = movie.Validate ();
-            if (!String.IsNullOrEmpty (message))
-            {
-                MessageBox.Show (this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            };
+            if (!Validate (movie))
+                return;
+
+            
                 
            
             //Save it
             Movie = movie;
             DialogResult = DialogResult.OK;
             Close ();
+        }
+
+        private bool Validate (IValidatableObject movie)
+        {
+            var validator = new ObjectValidator ();
+            var results = validator.TryValidateObject (movie);
+            // var message = movie.Validate ();
+            /*var results = new List<ValidationResult> ();
+            var context = new ValidationContext (movie);
+            if (!Validator.TryValidateObject (movie, context, results))
+            {
+
+            }
+            var context = new ValidationContext (movie);
+            //var results = movie.Validate (context); */
+            if (results.Count() > 0)
+            {
+                foreach (var result in results)
+                {
+                   
+                    MessageBox.Show (this, result.ErrorMessage, "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                        
+                };
+                return false;
+            };
+
+
+
+            
+            /*if (!String.IsNullOrEmpty (message))
+            {
+                MessageBox.Show (this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }; */
+
+            return true; 
         }
 
         private int GetAsInt32(TextBox control)
