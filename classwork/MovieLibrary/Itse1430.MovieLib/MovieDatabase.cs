@@ -1,126 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System;
 namespace Itse1430.MovieLib
 {
-    public class MovieDatabase
+    public abstract class MovieDatabase : IMovieDatabase
     {
 
-        public MovieDatabase ()
-        {
 
-            //collection initializer
-            _movies = new List<Movie> () {
-                new Movie () {
-                    Id = ++_id,
-                    Title = "Jaws",
-                    ReleaseYear = 1979,
-                    Rating = "G",
-                },
-                new Movie () {
-                    Id = ++_id,
-                    Title = "Wall Street",
-                    ReleaseYear = 1986,
-                    Rating = "PG",
-                },
-                new Movie () {
-                    Id = ++_id,
-                    Title = "Rambo",
-                    ReleaseYear = 1984,
-                    Rating = "PG",
-                },
-
-                //var movie = new Movie () {
-                //    Id = ++_id,
-                //    Title = "Jaws",
-                //    ReleaseYear = 1979,
-                //    Rating = "G",
-
-                //};
-                ////Add (movie);
-                //_movies.Add (movie);
-
-                //movie = new Movie () {
-                //    Id = ++_id,
-                //    Title = "Wall Street",
-                //    ReleaseYear = 1986,
-                //    Rating = "PG",
-                //};
-                //_movies.Add (movie);
-
-                //movie = new Movie () {
-                //    Id = ++_id,
-                //    Title = "Rambo",
-                //    ReleaseYear = 1984,
-                //    Rating = "PG",
-                //};
-                //_movies.Add (movie);
-
-
-            };
-        }
         public Movie Add ( Movie movie )
         {
             //TODO: validation
             if (movie == null)
                 return null;
             //if (!String.IsNullOrEmpty (movie.Validate ()))
-            var context = new ValidationContext (movie);
+            //var context = new ValidationContext (movie);
 
-            var results = movie.Validate (context);
+            //var results = movie.Validate (context);
+
+            var results = ObjectValidator.TryValidateObject (movie);
 
             if (results.Count () > 0)
                 return null;
 
             //name must be unique
-            var existing = FindMovie (movie.Title);
+            var existing = GetByNameCore (movie.Title);
             if (existing != null)
                 return null;
 
-            //add movie
-            movie.Id = ++_id;
-
-            var newMovie = Clone (new Movie (), movie);
-            _movies.Add (newMovie);
-
-            return movie;
+            return AddCore (movie);
         }
 
+        /// <summary>
+        /// add movie to database
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <returns>updated movie</returns>
+        /// 
+        protected abstract Movie AddCore ( Movie movie );
         public void Remove ( int id )
         {
-            var movie = FindMovie (id);
-            if (movie != null)
-                _movies.Remove (movie);
-
-            _movies.Remove (movie);
+            //validate the id
+        
+                RemoveCore (id);
+          
         }
 
-        public Movie Get (int id)
+        protected abstract void RemoveCore ( int id );
+
+        public Movie Get ( int id )
         {
             //TODO: validate
             if (id <= 0)
                 return null;
 
-            var movie = FindMovie (id);
-            return movie != null ? Clone (new Movie (), movie) : null;
+            return GetCore (id);
+            
         }
 
-        public Movie[] GetAll ()
+        protected abstract Movie GetCore ( int id );
+
+        public IEnumerable<Movie> GetAll ()
         {
-            var index = 0;
-            var movies = new Movie[_movies.Count];
-            foreach (var movie in _movies)
-                if (movie != null)
-                    movies[index++] = Clone (new Movie (), movie);
-
-            return movies;
+            return GetAllCore ();
+            
         }
 
-        public void Update(int id, Movie newMovie)
+        protected abstract IEnumerable<Movie> GetAllCore ();
+
+        public void Update ( int id, Movie newMovie )
         {
             //validate parameters
             if (id <= 0)
@@ -129,56 +76,24 @@ namespace Itse1430.MovieLib
                 return;
 
             //if (!String.IsNullOrEmpty(newMovie.Validate()))
-            var context = new ValidationContext (newMovie);
-            var results = newMovie.Validate (context);
-
+            var results = ObjectValidator.TryValidateObject(newMovie);
+           
             if (results.Count () > 0)
                 return;
-           
-            var existing = FindMovie (newMovie.Title);
+
+            var existing = GetByNameCore (newMovie.Title);
             if (existing != null && existing.Id != id)
                 return;
 
-            existing = FindMovie (id);
-            if (existing == null)
-                return; //error
-
-            //update existing movie
-            newMovie.Id = id;
-            Clone (existing, newMovie);
+            UpdateCore (id, newMovie);
         }
 
-        private Movie FindMovie(int id)
-        {
-            foreach (var movie in _movies)
-                if (movie.Id == id)
-                    return movie;
-            return null;
-        }
+        protected abstract Movie UpdateCore( int id, Movie newMovie );
 
-        private Movie FindMovie ( string name )
-        {
-            foreach (var movie in _movies)
-                if (String.Compare(movie.Title, name, true) == 0)
-                    return movie;
-            return null;
-        }
 
-        private Movie Clone(Movie target, Movie source)
-        {
-            target.Id = source.Id;
-            target.Description = source.Description;
-            target.HasSeen = source.HasSeen;
-            target.Rating = source.Rating;
-            target.ReleaseYear = source.ReleaseYear;
-            target.RunLength = source.RunLength;
-            target.Title = source.Title;
 
-            return target;
-        }
-
-        //private Movie[] _movies = new Movie[100];
-        private List<Movie> _movies = new List<Movie> ();
-        private int _id = 0;
+        protected abstract Movie GetByNameCore ( string name );
+                  
+        
     }
 }
