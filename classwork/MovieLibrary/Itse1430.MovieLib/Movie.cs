@@ -24,14 +24,16 @@ namespace Itse1430.MovieLib
 
         public string Description
         {
-            get { return _description ?? ""; }
-            set { _description = value; }
+            // get { return _description ?? ""; }
+            get => _description ?? "";
+            set => _description = value;
         }
 
         public string Rating
         {
-            get { return _rating ?? ""; }
-            set { _rating = value; }
+            get => _rating ?? "";
+            //set { _rating = value; }
+            set => _rating = value;
         }
 
         public int ReleaseYear { get; set; } = 1900; //Auto property
@@ -59,10 +61,10 @@ namespace Itse1430.MovieLib
         public const int ReleaseYearForColor = 1939;
         //private readonly int _releaseYearForColor = 1939;
         public bool IsBlackAndWhite
-        {
-            get { return ReleaseYear <= ReleaseYearForColor; }
-            //set { }
-        }
+            => ReleaseYear <= ReleaseYearForColor;
+        /*public bool IsBlackAndWhite2
+            => ReleaseYear <= ReleaseYearForColor; */
+      
 
         //Mixed accessibility - property must be most visible
         public string TestAccessibility
@@ -84,9 +86,8 @@ namespace Itse1430.MovieLib
         /// <returns>An error msg if validation fails or empty string otherwise.</returns>
         /// 
         public override string ToString ()
-        {
-            return $"{Title} ({ReleaseYear})";
-        }
+            => $"{Title} ({ReleaseYear})";
+        
 
         /*public string Validate()
         {

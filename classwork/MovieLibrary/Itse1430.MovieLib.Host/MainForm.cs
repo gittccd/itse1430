@@ -32,21 +32,63 @@ namespace Itse1430.MovieLib.Host
             UpdateUI ();
         }
 
+        //private string OrderByTitle (Movie movie)
+        //{
+        //    return movie.Title;
+        //}
+
+        //private int OrderByReleaseYear (Movie movie)
+        //{
+        //    return movie.ReleaseYear;
+        //}
+
         private void UpdateUI()
         {
-            var movies = _movies.GetAll ();
+            var movies = _movies.GetAll ()
+            
+                                //.OrderBy (OrderByTitle)
+                                .OrderBy (m => m.Title)
+                                //.ThenBy (OrderByReleaseYear);
+                                .ThenBy (m => m.ReleaseYear);
 
-            //var movie = movies[0];
-            //movie.Title = "Bob";
 
-            //Programmatic approach
-            //_listMovies.Items.Clear ();
-            //_listMovies.Items.AddRange (movies);
+            PlayWithEnumerable (movies);
 
+     
+
+            
             //For more complex bindings
            
             _listMovies.DataSource = movies.ToArray();
         }
+
+        private void PlayWithEnumerable ( IEnumerable<Movie> movies )
+        {
+            Movie firstOne = movies.FirstOrDefault ();
+            Movie lastOne = movies.LastOrDefault ();
+            //Movie onlyOne = movies.SingleOrDefault();
+
+            /*var coolMovies = movies.Where (m => m.ReleaseYear > 1979
+                                                 && m.ReleaseYear < 2000); */
+
+            int id = 1;
+            var temp1 = new NestedType { id = id };
+            var otherMovies = movies.Where (temp1.WhereCondition);
+            var lastId = id;
+        }
+
+        private sealed class NestedType
+        {
+            public int id { get; set; }
+
+            public bool WhereCondition (Movie m)
+            {
+                return m.Id > ++id;
+            }
+                  
+        
+        }
+
 
         private IMovieDatabase _movies;
 
@@ -55,33 +97,13 @@ namespace Itse1430.MovieLib.Host
             var item = _listMovies.SelectedItem;
             //if (item == null)
             //    return null;
-
             //movie or null
             return item as Movie;
 
-            /*other approaches
-            //C-style cast:  
-            (Movie)item;
-
-            //item is Movie;  E is T --> bool
-
-
-
-            //old approach 1
-            var tempVar = item as Movie;
-            if (tempVar != null)...;
-
-            //old approach 2
-            if (item is Movie)
-            {
-                var i = (Movie)item;
-                //do something with movie
-            }
-            //pattern matching
-            if (item is Movie movie)
-            {
-
-            }; */
+            //var firstMovie = _listMovies.SelectedItems.OfType<Movie> ()
+            //                                         .OfType<Movie> ()
+            //                                         .FirstOrDefault ();
+           
         }
 
         private void OnHelpAbout ( object sender, EventArgs e )
@@ -144,10 +166,13 @@ namespace Itse1430.MovieLib.Host
         protected override void OnLoad ( EventArgs e )
         {
             base.OnLoad (e);
+
+            //seed movies
             _movies = new MemoryMovieDatabase ();
             var count = _movies.GetAll ().Count ();
             if (count == 0)
-                MovieDatabaseExtensions.Seed (_movies);
+                //MovieDatabaseExtensions.Seed (_movies);
+                _movies.Seed ();
 
             UpdateUI ();
         }
