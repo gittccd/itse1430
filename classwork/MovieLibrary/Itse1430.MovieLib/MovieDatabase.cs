@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace Itse1430.MovieLib
 {
     public abstract class MovieDatabase : IMovieDatabase
@@ -10,8 +12,12 @@ namespace Itse1430.MovieLib
         public Movie Add ( Movie movie )
         {
             //TODO: validation
+            //if (movie == null)
+            //  return null;
+            //throw new Exception ("Movie is null");
             if (movie == null)
-                return null;
+                throw new ArgumentNullException (nameof(movie));
+
             //if (!String.IsNullOrEmpty (movie.Validate ()))
             //var context = new ValidationContext (movie);
 
@@ -20,12 +26,14 @@ namespace Itse1430.MovieLib
             var results = ObjectValidator.TryValidateObject (movie);
 
             if (results.Count () > 0)
-                return null;
+                //return null;
+                throw new ValidationException (results.FirstOrDefault().ErrorMessage);
 
             //name must be unique
             var existing = GetByNameCore (movie.Title);
             if (existing != null)
-                return null;
+                //return null;
+                throw new InvalidOperationException ("Movie must be unique");
 
             return AddCore (movie);
         }
@@ -40,8 +48,10 @@ namespace Itse1430.MovieLib
         public void Remove ( int id )
         {
             //validate the id
-        
-                RemoveCore (id);
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException (nameof(id), "Id must be > 0.");
+
+            RemoveCore (id);
           
         }
 
@@ -51,7 +61,8 @@ namespace Itse1430.MovieLib
         {
             //TODO: validate
             if (id <= 0)
-                return null;
+                throw new ArgumentOutOfRangeException (nameof (id),
+                                                       "Id must be > 0.");
 
             return GetCore (id);
             
@@ -71,19 +82,19 @@ namespace Itse1430.MovieLib
         {
             //validate parameters
             if (id <= 0)
-                return;
+                throw new ArgumentOutOfRangeException(nameof(id), "Id must be > 0.");
             if (newMovie == null)
-                return;
+                throw new ArgumentNullException(nameof(newMovie));
 
             //if (!String.IsNullOrEmpty(newMovie.Validate()))
             var results = ObjectValidator.TryValidateObject(newMovie);
            
             if (results.Count () > 0)
-                return;
+                throw new ValidationException(results.FirstOrDefault().ErrorMessage);
 
             var existing = GetByNameCore (newMovie.Title);
             if (existing != null && existing.Id != id)
-                return;
+                throw new InvalidOperationException("Movie must be unique.");
 
             UpdateCore (id, newMovie);
         }

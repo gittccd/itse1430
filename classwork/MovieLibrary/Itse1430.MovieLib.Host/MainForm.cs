@@ -25,6 +25,7 @@ namespace Itse1430.MovieLib.Host
 
             //modeless :does not block main window
             //form.Show ();
+           
 
             //show the new movie form modally
             if (form.ShowDialog (this) == DialogResult.OK)
@@ -42,14 +43,18 @@ namespace Itse1430.MovieLib.Host
         //    return movie.ReleaseYear;
         //}
 
-        private void UpdateUI()
+        private void UpdateUI() 
         {
-            var movies = _movies.GetAll ()
+            var movies = from m in _movies.GetAll ()
+                         orderby m.Title, m.ReleaseYear
+                         select m;
+
+           /* var movies = _movies.GetAll ()
             
                                 //.OrderBy (OrderByTitle)
                                 .OrderBy (m => m.Title)
                                 //.ThenBy (OrderByReleaseYear);
-                                .ThenBy (m => m.ReleaseYear);
+                                .ThenBy (m => m.ReleaseYear); */
 
 
             PlayWithEnumerable (movies);
