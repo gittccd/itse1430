@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Forms;
+using Itse1430.MovieLib.IO;
 
 namespace Itse1430.MovieLib.Host
 {
@@ -9,9 +11,9 @@ namespace Itse1430.MovieLib.Host
     {
         public MainForm ()
         {
-        
+
             InitializeComponent ();
-           
+
         }
 
         private void ToolStripSeparator1_Click ( object sender, EventArgs e )
@@ -25,13 +27,38 @@ namespace Itse1430.MovieLib.Host
 
             //modeless :does not block main window
             //form.Show ();
-           
+
 
             //show the new movie form modally
             if (form.ShowDialog (this) == DialogResult.OK)
-                _movies.Add (form.Movie);
-            UpdateUI ();
+            {
+                try
+                {
+                    _movies.Add (form.Movie);
+                    UpdateUI ();
+                } catch (ArgumentException ex)
+                {
+                    MessageBox.Show (ex.Message, "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                } catch (ValidationException ex)
+                {
+                    MessageBox.Show (ex.Message, "Validation Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                } catch //(Exception ex)
+                {
+                    MessageBox.Show ("Save failed", "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+
+                    //throw;    //rethrow existing exception
+                    //throw ex; //throwing new exception
+                };
+            };
+               
         }
+    
 
         //private string OrderByTitle (Movie movie)
         //{
@@ -77,9 +104,8 @@ namespace Itse1430.MovieLib.Host
                                                  && m.ReleaseYear < 2000); */
 
             int id = 1;
-            var temp1 = new NestedType { id = id };
-            var otherMovies = movies.Where (temp1.WhereCondition);
-            var lastId = id;
+            var otherMovies = movies.Where (m => m.Id > ++id);
+            
         }
 
         private sealed class NestedType
@@ -173,7 +199,7 @@ namespace Itse1430.MovieLib.Host
             base.OnLoad (e);
 
             //seed movies
-            _movies = new MemoryMovieDatabase ();
+            _movies = new FileMovieDatabase (@"movies.csv");
             var count = _movies.GetAll ().Count ();
             if (count == 0)
                 //MovieDatabaseExtensions.Seed (_movies);
