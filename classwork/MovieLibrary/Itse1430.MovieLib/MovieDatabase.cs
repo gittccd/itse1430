@@ -72,10 +72,10 @@ namespace Itse1430.MovieLib
         protected abstract Movie GetCore ( int id );
 
         public IEnumerable<Movie> GetAll ()
-        {
+        
             => GetAllCore () ?? Enumerable.Empty<Movie> ();
             
-        }
+        
 
         protected abstract IEnumerable<Movie> GetAllCore ();
 
