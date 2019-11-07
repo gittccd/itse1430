@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -125,6 +126,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Itse1430.MovieLibSqlServer\Itse1430.MovieLibSqlServer.csproj">
+      <Project>{44254587-1cc7-4dbf-b249-f7c12bbc793a}</Project>
+      <Name>Itse1430.MovieLibSqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Itse1430.MovieLib\Itse1430.MovieLib.csproj">
       <Project>{ea590bf9-4614-413c-a610-39031b8dd79c}</Project>
       <Name>Itse1430.MovieLib</Name>
