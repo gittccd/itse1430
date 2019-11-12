@@ -15,7 +15,30 @@ namespace Itse1430.MovieLibSqlServer
         {
             _connectionString = connectionString;
         }
-        protected override Movie AddCore ( Movie movie ) => throw new NotImplementedException ();
+        protected override Movie AddCore ( Movie movie )
+        {
+            using (var conn = CreateConnection ())
+            using (var cmd = new SqlCommand ("AddMovie", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //cmd.Paramaters.AddWithValue
+                //cmd.Parameters.Add ("@id", SqlDbType.Int);
+                var parmName = new SqlParameter ("@name", movie.Title);
+                cmd.Parameters.Add (parmName);
+                cmd.Parameters.AddWithValue ("@rating", movie.Rating);
+                cmd.Parameters.AddWithValue ("@description", movie.Description);
+                cmd.Parameters.AddWithValue ("@releaseYear", movie.ReleaseYear);
+                cmd.Parameters.AddWithValue ("@runLength", movie.RunLength);
+                cmd.Parameters.AddWithValue ("@hasSeen", movie.HasSeen);
+
+                conn.Open ();
+                var result = (decimal)cmd.ExecuteScalar ();
+                movie.Id = Convert.ToInt32 (result);
+
+                return movie;
+            };
+        }
 
         protected override IEnumerable<Movie> GetAllCore ()
         {
@@ -62,21 +85,126 @@ namespace Itse1430.MovieLibSqlServer
 
         protected override Movie GetByNameCore ( string name )
         {
+            using (var conn = CreateConnection ())
+            using (var cmd = new SqlCommand ("FindByName", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue ("@name", name);
+
+                conn.Open ();
+                using (var reader = cmd.ExecuteReader ())
+                {
+                    //Multiple tables
+                    //reader.NextResult()
+
+                    if (reader.Read ())
+                    {
+                        var releaseYearIndex = reader.GetOrdinal ("ReleaseYear");
+                        var hasSeenIndex = reader.GetOrdinal ("HasSeen");
+
+                        var movie = new Movie () {
+                            Id = (int)reader[0],
+                            Title = reader["Name"] as string,
+                            Description = reader.GetString (2),
+                            Rating = reader.GetFieldValue<string> (3),
+                            RunLength = (int)reader.GetValue (5),
+                            ReleaseYear = reader.GetInt32 (releaseYearIndex),
+                            HasSeen = reader.GetBoolean (hasSeenIndex)
+                        };
+
+                        return movie;
+                    };
+                };
+            };
+
             return null;
+
         }
 
         protected override Movie GetCore ( int id )
         {
+            using (var conn = CreateConnection ())
+            using (var cmd = new SqlCommand ("GetMovie", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue ("@id", id);
+
+                conn.Open ();
+                using (var reader = cmd.ExecuteReader ())
+                {
+                    //Multiple tables
+                    //reader.NextResult()
+
+                    if (reader.Read ())
+                    {
+                        var releaseYearIndex = reader.GetOrdinal ("ReleaseYear");
+                        var hasSeenIndex = reader.GetOrdinal ("HasSeen");
+
+                        var movie = new Movie () {
+                            Id = (int)reader[0],
+                            Title = reader["Name"] as string,
+                            Description = reader.GetString (2),
+                            Rating = reader.GetFieldValue<string> (3),
+                            RunLength = (int)reader.GetValue (5),
+                            ReleaseYear = reader.GetInt32 (releaseYearIndex),
+                            //HasSeen = reader.GetBoolean (hasSeenIndex)
+                        };
+
+                        return movie;
+                    };
+                };
+            };
+
             return null;
+
         }
 
-        protected override void RemoveCore ( int id ) => throw new NotImplementedException ();
-        protected override Movie UpdateCore ( int id, Movie newMovie ) => throw new NotImplementedException ();
+        protected override void RemoveCore ( int id )
+        {
+            using (var conn = CreateConnection ())
+            using (var cmd = new SqlCommand ("DeleteMovie", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //cmd.Paramaters.AddWithValue
+                cmd.Parameters.Add ("@id", SqlDbType.Int);
+                cmd.Parameters[0].Value = id;
+
+                conn.Open ();
+                cmd.ExecuteNonQuery ();
+            };
+
+            
+        }
+        protected override Movie UpdateCore ( int id, Movie movie )
+        {
+            using (var conn = CreateConnection ())
+            using (var cmd = new SqlCommand ("UpdateMovie", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //cmd.Paramaters.AddWithValue
+                //cmd.Parameters.Add ("@id", SqlDbType.Int);
+                var parmName = new SqlParameter ("@name", movie.Title);
+                cmd.Parameters.Add (parmName);
+                cmd.Parameters.AddWithValue ("@rating", movie.Rating);
+                cmd.Parameters.AddWithValue ("@description", movie.Description);
+                cmd.Parameters.AddWithValue ("@releaseYear", movie.ReleaseYear);
+                cmd.Parameters.AddWithValue ("@runLength", movie.RunLength);
+                cmd.Parameters.AddWithValue ("@hasSeen", movie.HasSeen);
+                cmd.Parameters.AddWithValue ("@id", movie.Id);
+
+                conn.Open ();
+                cmd.ExecuteNonQuery ();
+
+                return movie;
+            };
+        }
 
         private SqlConnection CreateConnection ()
         {
             var conn = new SqlConnection (_connectionString);
-            conn.Open ();
+            //conn.Open ();
             return conn;
         }
 
