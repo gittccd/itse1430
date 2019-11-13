@@ -105,7 +105,9 @@ namespace Itse1430.MovieLibSqlServer
                         var movie = new Movie () {
                             Id = (int)reader[0],
                             Title = reader["Name"] as string,
-                            Description = reader.GetString (2),
+
+                            //FIX: Handle null
+                            Description = !reader.IsDBNull(2) ? reader.GetString(2) : "",
                             Rating = reader.GetFieldValue<string> (3),
                             RunLength = (int)reader.GetValue (5),
                             ReleaseYear = reader.GetInt32 (releaseYearIndex),
@@ -143,7 +145,9 @@ namespace Itse1430.MovieLibSqlServer
                         var movie = new Movie () {
                             Id = (int)reader[0],
                             Title = reader["Name"] as string,
-                            Description = reader.GetString (2),
+
+                            //Handle null
+                            Description = !reader.IsDBNull(2) ? reader.GetString(2) : "",
                             Rating = reader.GetFieldValue<string> (3),
                             RunLength = (int)reader.GetValue (5),
                             ReleaseYear = reader.GetInt32 (releaseYearIndex),
@@ -181,6 +185,9 @@ namespace Itse1430.MovieLibSqlServer
             using (var conn = CreateConnection ())
             using (var cmd = new SqlCommand ("UpdateMovie", conn))
             {
+                //set Id
+                movie.Id = id;
+
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 //cmd.Paramaters.AddWithValue
