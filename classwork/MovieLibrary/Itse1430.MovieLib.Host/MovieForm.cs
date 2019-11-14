@@ -52,8 +52,8 @@ namespace Itse1430.MovieLib.Host
 
         private void OnSave ( object sender, EventArgs e )
         {
-            if (!ValidateChildren ())
-                return;
+            //if (!ValidateChildren ())
+                //return;
 
             //object initializer syntax
             var movie = new Movie () {
@@ -66,9 +66,10 @@ namespace Itse1430.MovieLib.Host
                 HasSeen = _cbHasSeen.Checked,
              };
 
+            
             //validate
-            if (!Validate (movie))
-                return;
+            //if (!Validate (movie))
+                //return;
 
             
                 

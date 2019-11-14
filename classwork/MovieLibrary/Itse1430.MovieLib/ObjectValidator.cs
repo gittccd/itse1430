@@ -15,7 +15,7 @@ namespace Itse1430.MovieLib
 
             var context = new ValidationContext (value);
 
-            Validator.TryValidateObject (value, context, results);
+            Validator.TryValidateObject (value, context, results, true);
 
             foreach (var result in results)
                 yield return result;
