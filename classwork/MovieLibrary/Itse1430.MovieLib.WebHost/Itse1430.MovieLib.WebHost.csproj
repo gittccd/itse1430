@@ -120,9 +120,12 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MovieController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\MovieModel.cs" />
+    <Compile Include="Models\MovieModelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +164,17 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Movie\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\Itse1430.MovieLibSqlServer\Itse1430.MovieLibSqlServer.csproj">
+      <Project>{44254587-1CC7-4DBF-B249-F7C12BBC793A}</Project>
+      <Name>Itse1430.MovieLibSqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Itse1430.MovieLib\Itse1430.MovieLib.csproj">
+      <Project>{ea590bf9-4614-413c-a610-39031b8dd79c}</Project>
+      <Name>Itse1430.MovieLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
